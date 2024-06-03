@@ -37,5 +37,4 @@ Before you begin, ensure you have met the following requirements:
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/realtime-chat-app.git
-cd realtime-chat-app
+https://github.com/HKM-Rusaik/real-time-chat-app/tree/master
