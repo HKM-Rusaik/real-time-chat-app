@@ -7,8 +7,8 @@ This repository contains a real-time chat application built using Socket.IO, Nes
 - [Features](#features)
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
-- [Backend Setup](#https://github.com/HKM-Rusaik/real-time-chat-app/blob/master/backend/README.md)
-- [Frontend Setup](#https://github.com/HKM-Rusaik/real-time-chat-app/tree/master/chat-app#readme)
+- [Backend Setup](#backend-setup)
+- [Frontend Setup](#frontend-setup)
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
@@ -20,7 +20,8 @@ This real-time chat application allows users to join chat rooms and exchange mes
 ## Features
 
 - Real-time messaging
-- Room chatting
+- Room-based chat
+- User authentication (token-based)
 
 ## Prerequisites
 
@@ -29,10 +30,10 @@ Before you begin, ensure you have met the following requirements:
 - Node.js (version 14 or later)
 - npm or yarn
 
-## Getting Started
-
-To get a local copy up and running, follow these steps:
-
+## Front end
+ - go through chat-app readme
+## Backend
+- go through backend readme
 ### Clone the Repository
 
 ```bash
