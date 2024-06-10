@@ -4,11 +4,13 @@ import io from "socket.io-client";
 const MessageInput = ({ sendMessage, joinRoom }) => {
   const [message, setMessage] = useState("");
   const [room, setRoom] = useState("");
+  const [socketId, setSocketId] = useState(""); // New state for recipient socket ID
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-    sendMessage(message);
+    sendMessage(message, socketId);
     setMessage("");
+    setSocketId("");
   };
 
   const handleJoinRoom = (e) => {
@@ -38,6 +40,22 @@ const MessageInput = ({ sendMessage, joinRoom }) => {
       >
         Join Room
       </button>
+      <div className="mb-4 w-full">
+        <label
+          htmlFor="socketId"
+          className="block text-gray-700 font-bold mb-2"
+        >
+          Socket ID
+        </label>
+        <input
+          type="text"
+          id="socketId"
+          value={socketId}
+          onChange={(e) => setSocketId(e.target.value)}
+          placeholder="Enter recipient socket ID"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+      </div>
       <div className="mb-4 w-full">
         <label htmlFor="message" className="block text-gray-700 font-bold mb-2">
           Message

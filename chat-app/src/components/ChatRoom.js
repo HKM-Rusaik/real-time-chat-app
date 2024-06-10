@@ -3,35 +3,47 @@ import io from "socket.io-client";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
 
-const socket = io("http://localhost:3000");
+const socket = io("http://localhost:5000");
 
-const ChatRoom = () => {
+const ChatApp = () => {
   const [messages, setMessages] = useState([]);
-  const [receivedMessages, setReceivedMessages] = useState([]);
-  socket.on("recieve-message", (message) => {
-    console.log("Received message:", message);
-    setReceivedMessages((prevReceivedMessages) => [
-      ...prevReceivedMessages,
-      message,
-    ]);
-  });
+  const [socketId, setSocketId] = useState("");
 
-  socket.on("message", (message) => {
-    console.log("Received message:", message);
-    setMessages((prevMessages) => [...prevMessages, message]);
-  });
+  useEffect(() => {
+    socket.on("connect", () => {
+      setSocketId(socket.id);
+    });
 
-  const sendMessage = (message) => {
-    socket.emit("message", message);
+    socket.on("receive-message", (messageObj) => {
+      console.log("message received");
+      setMessages((prevMessages) => [...prevMessages, messageObj]);
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("receive-message");
+    };
+  }, []);
+
+  const sendMessage = (message, recipientSocketId) => {
+    if (recipientSocketId) {
+      socket.emit("private_message", { message, socketId: recipientSocketId });
+      console.log(message, recipientSocketId);
+    } else {
+      socket.emit("message", message);
+    }
+  };
+
+  const joinRoom = (room) => {
+    socket.emit("join", room);
   };
 
   return (
-    <div className="chat-room flex flex-col items-center">
-      {messages}
-      <MessageList messages={receivedMessages} socketId={socket.id} />
-      <MessageInput sendMessage={sendMessage} />
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <MessageList messages={messages} socketId={socketId} />
+      <MessageInput sendMessage={sendMessage} joinRoom={joinRoom} />
     </div>
   );
 };
 
-export default ChatRoom;
+export default ChatApp;

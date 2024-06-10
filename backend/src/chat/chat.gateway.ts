@@ -18,7 +18,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private chatService: ChatService) {}
 
   handleConnection(client: Socket) {
-    console.log('Messages received:');
     console.log('Client connected:', client.id);
   }
 
@@ -28,12 +27,43 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('message')
   handleMessage(
-    @MessageBody() messages: string[],
+    @MessageBody() message: string,
     @ConnectedSocket() client: Socket,
   ): void {
-    console.log('Messages received:', messages);
-    client.broadcast.emit('recieve-message', messages);
+    console.log('Message received:', message);
+
+    const filteredMessage = message.toLowerCase().includes('chicken')
+      ? null
+      : message;
+
+    if (filteredMessage === null) {
+      console.log('Message contains "chicken". Filtering out.');
+      return;
+    }
+
+    client.broadcast.emit('receive-message', {
+      message,
+      socketId: client.id,
+      private: false,
+    });
+  }
+
+  @SubscribeMessage('private_message')
+  handlePrivateMessage(
+    @MessageBody() data: { message: string; socketId: string },
+    @ConnectedSocket() client: Socket,
+  ): void {
+    const { message, socketId } = data;
+    console.log(`Private message from ${client.id} to ${socketId}: ${message}`);
+    try {
+      this.server.to(socketId).emit('receive-message', {
+        message,
+        socketId: client.id,
+        private: true,
+      });
+      console.log(`Private message sent to ${socketId}`);
+    } catch (error) {
+      console.error(`Error sending private message to ${socketId}:`, error);
+    }
   }
 }
-
-// this.server.emit('recieve-message', message); // send message to all sockets

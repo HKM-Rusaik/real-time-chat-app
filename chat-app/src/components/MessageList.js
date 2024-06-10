@@ -8,12 +8,16 @@ const MessageList = ({ messages, socketId }) => {
       </div>
       <div className="w-[70%] mt-4 bg-white flex flex-col items-center shadow-md rounded-lg p-4 max-h-[60vh] overflow-y-auto">
         <div className="text-xl font-bold mb-4">Messages</div>
-        {messages.map((message, index) => (
+        {messages.map((messageObj, index) => (
           <div
             key={index}
             className="w-[50%] bg-gradient-to-r from-gray-100 to-gray-200 p-3 my-2 rounded-md shadow-sm hover:shadow-md transition-shadow"
           >
-            {message}
+            <div className="text-sm text-gray-500">
+              From: {messageObj.socketId}{" "}
+              {messageObj.private && <span>(Private)</span>}
+            </div>
+            <div>{messageObj.message}</div>
           </div>
         ))}
       </div>
